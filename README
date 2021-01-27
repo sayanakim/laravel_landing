@@ -1,0 +1,91 @@
+1. Консоль:
+        - laravel new <name>
+        - делаем главнуюстраницу из папки public
+        - добавляем зависимости в composer.json в консоли: $ composer require laravelcollective/html
+
+2. Создание базы данных
+        - создаем базу данных land в админке
+        - миграции:
+            страницы pages:
+            $ php artisan make:migration create_table_pages --create=pages
+            страницы services:
+            $ php artisan make:migration create_table_services --create=services
+            страницы portfolio:
+            $ php artisan make:migration create_table_portfolios --create=portfolios
+            страницы team:
+            $ php artisan make:migration create_table_peoples --create=peoples
+
+        - добавляем в миграции таблицы database->migrations->create_table_pages:
+                public up:
+                $table->string('name', 100);
+                $table->string('alias', 100);
+                $table->text('text');
+                $table->string('images', 100);
+        - добавляем в миграции таблицы database->migrations->create_table_services:
+                    public function up()
+                    {
+                        Schema::create('services', function (Blueprint $table) {
+                            $table->id();
+                            $table->string('name', 100); // заголовок
+                            $table->text('text'); // текст
+                            $table->string('icon', 100); // иконка
+                            $table->timestamps();
+                        });
+                    }
+        - добавляем в миграции таблицы database->migrations->create_table_portfolios:
+            public function up()
+            {
+                Schema::create('portfolios', function (Blueprint $table) {
+                    $table->id();
+                    $table->string('name', 200); // заголовок
+                    $table->string('images', 100); // картинки
+                    $table->string('filter', 200); // фильтрация картинок
+                    $table->timestamps();
+                });
+            }
+        - добавляем в миграции таблицы database->migrations->create_table_peoples:
+                public function up()
+                {
+                    Schema::create('peoples', function (Blueprint $table) {
+                        $table->id();
+                        $table->string('name', 255); // имя
+                        $table->string('position', 150); // позиции
+                        $table->string('images', 100); // картинки
+                        $table->text('text');
+                        $table->timestamps();
+                    });
+                }
+        - меняем в .env:
+            DB_CONNECTION=mysql
+            DB_HOST=127.0.0.1
+            DB_PORT=3306
+            DB_DATABASE=land
+            DB_USERNAME=root
+            DB_PASSWORD=root
+        - консоль: php artisan migrate
+
+3. Создание маршрутов
+
+    web.php
+
+4. Создание контроллеров
+    - IndexController: php artisan make:controller IndexController
+        пишем вид,
+        создаем шаблон site.blade -> прописываем пути к стилям, например:
+        <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+        создаем папку assets(в папке public) -> помещаем стили и скрипты
+
+5. Создаем модель БД
+    - php artisan make:model Page
+      php artisan make:model Service
+      php artisan make:model Portfolio
+      php artisan make:model People
+    - IndexController:
+        добавляем связь:
+        use App\Models\Page;
+        use App\Models\Service;
+        use App\Models\Portfolio;
+        use App\Models\People;
+
+6. Делим шаблон на части
+7. Выводим информацию на экран из БД
